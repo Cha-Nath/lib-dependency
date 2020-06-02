@@ -7,7 +7,7 @@
     },
     "autoload": {
         "psr-4": {
-            "nlib\\Dependency\\": ""
+            "nlib\\Dependency\\": "src/"
         }
     },
     "minimum-stability": "dev",
