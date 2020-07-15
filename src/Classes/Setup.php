@@ -6,8 +6,11 @@ use nlib\Dependency\Interfaces\SetupInterface;
 
 use nlib\Dependency\Classes\Missing;
 use nlib\Dependency\Classes\Reporter;
+use nlib\Instance\Traits\InstanceTrait;
 
 class Setup implements SetupInterface {
+
+    use InstanceTrait;
 
     private $_class_file;
 
@@ -15,12 +18,12 @@ class Setup implements SetupInterface {
 
     public function init($current, array $dependencies) {
 
-        Dependency::i()->setCurrent($current)->setDependencies($dependencies);
+        Dependency::i($i = $this->_i())->setCurrent($current)->setDependencies($dependencies);
         
-        try { (new Checker)->check(); }
+        try { (new Checker)->setInstance($i)->check(); }
         catch (Missing $e) {
             
-            (new Reporter($e->getPlugins()))->add_admin_notices();
+            (new Reporter($e->getPlugins()))->setInstance($i)->add_admin_notices();
             add_action('admin_init', [$this, 'disable_plugin']);
             return false;
         }
